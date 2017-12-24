@@ -128,8 +128,9 @@ void loop() {
 	for(int i=0; i<NUM_BUTTONS; i++)
 		btns[i].update();
 
-	//Check if we enter debug mode
-	debug.process();
+	debug.process(); //Check if we enter/exit debug mode
+
+	//This only really does stuff if we're in debug mode. But we do it anyways to determine the sensitivity to use
 	debug.update_and_display_state();
 	struct updateable_values* update_vals = debug.get_values();
 
@@ -167,6 +168,7 @@ void loop() {
 			update_vals->btnR.update(btns[FX_R_IDX].state());
 		}
 
+		//Determine animations based on debug state
 		switch(debug.state()) {
 		case 0xF:
 			break;
@@ -204,6 +206,7 @@ void loop() {
 		}
 	}
 
+	//Execute led animations
 	uint32_t led_elapsed_time = cur_time - led_prev_time;
 	if(led_elapsed_time >= led_ani_delays[encoder_animation]) {
 		led_prev_time = cur_time;
@@ -236,6 +239,7 @@ void loop() {
 		encoder_leds.showLeds();
 	}
 
+	//Execute side led animations
 	uint32_t side_elapsed_time = cur_time - side_prev_time;
 	if(side_elapsed_time >= side_ani_delays[side_animation]) {
 		side_prev_time = cur_time;
